@@ -15,6 +15,7 @@ import org.hibernate.cfg.Configuration;
 public class ApplicationManager {
 	
 	public static Board CreateBoard() {
+		System.out.println(System.getProperty("user.dir"));
 		Board board=new Board();
 		 SessionFactory sessionFactory = new Configuration().configure()
 					.buildSessionFactory();
@@ -265,14 +266,46 @@ public class ApplicationManager {
 		 return list;
 	 }
 	 
+	 static List<Moves> getBoardContent(Board board) {
+			
+		 	SessionFactory sessionFactory = new Configuration().configure()
+					.buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			List<Moves> list=new ArrayList<Moves>();
+			try {
+				String hql = "FROM Board c WHERE c.boardId = "+board.getBoardId();
+	            Query query = session.createQuery(hql);
+	            List<Board> boardList = query.list();
+				
+			if(boardList.size()==0)
+				return null;
+			session.beginTransaction();
+			 String hql2 = "FROM Moves c WHERE c.boardId = "+board.getBoardId() +" c.sequence <= "+board.getSequence();
+			 Query query2 = session.createQuery(hql);
+          	
+          list = query2.list();
+			
+				session.getTransaction().commit();
+				session.close();
+			
+			} catch (Exception e) {
+				// TODO: handle exception
+				session.close();
+			}
+		 return list;
+	 }
+	 
 	 public static String CreateDictionary(String directory)
 	 {
 		 String message = "Ok";
 		 Dictionary dictionary=new Dictionary();
 		 BufferedReader br=null;
 		 System.out.println(directory);
-		 if(directory==null)
-		  return "Directory is null";
+		 System.out.println(System.getProperty("user.dir"));
+		 if(directory==null) 
+		  directory=System.getProperty("user.dir")+"scrabble_turkish_dictionary.txt";
+		 
+		 String workingDir = System.getProperty("user.dir");
 				  //directory="/Users/mert_celenk/eclipse-workspace/Scrabble/resources/scrabble_turkish_dictionary.txt";
 		 
 		 SessionFactory sessionFactory = new Configuration().configure()

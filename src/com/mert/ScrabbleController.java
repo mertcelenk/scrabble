@@ -35,6 +35,13 @@ public class ScrabbleController {
 		 return ApplicationManager.SetStatus(board);
 				 
 	}
+	 @RequestMapping(value = "/getboardcontent", headers = "Accept=application/json",method = RequestMethod.POST)
+	 @ResponseBody
+	public List<Moves> getBoardContent(@RequestBody Board board) {
+		
+		 return ApplicationManager.getBoardContent(board);
+				 
+	}
 	 
 	 @RequestMapping(value = "/getwords", headers = "Accept=application/json",method = RequestMethod.POST)
 	 @ResponseBody
